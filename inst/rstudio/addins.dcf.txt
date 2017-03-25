@@ -1,0 +1,6 @@
+Name: PIVOT Launcher
+Description: The interface for lauching PIVOT modules.
+Binding: pivot
+Interactive: true
+
+
