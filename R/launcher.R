@@ -84,14 +84,11 @@ pivot <- function(args = "launcher") {
 
             if(interactive()) {
                 isolate({
-                    if(input$tabstrip == "Main") {
-                        if("monocle" %in% modules()) {
-                            require(monocle)
-                        }
-                        Sys.sleep(1)
-                        rstudioapi::sendToConsole("pivot_main()", execute = T)
-                        stopApp("All change saved, returning to launcher...")
+                    if("monocle" %in% modules()) {
+                        require(monocle)
                     }
+                    stopApp("Please use command pivot_main() if new window does not launch...")
+                    rstudioapi::sendToConsole("pivot_main()", execute = T)
                 })
             } else {
                 stopApp()
