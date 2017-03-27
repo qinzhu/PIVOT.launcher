@@ -165,37 +165,44 @@ pivot <- function(args = "launcher") {
 
             main_info <- list(
                 Module = "PIVOT.analysis",
-                Description = "Main analysis module of PIVOT, including data input and management, DE, clustering, heatmap, dimension reduction, etc. "
-                #Citation = "Michael I Love, Wolfgang Huber and Simon Anders (2014): Moderated estimation of fold change and dispersion for RNA-Seq data with DESeq2. Genome Biology"
+                Description = "Main analysis module of PIVOT, including data input and management, DE, clustering, heatmap, dimension reduction, etc. ",
+                Depend = c("PIVOT.analysis"),
+                Citation = "Qin Zhu, Stephen A Fisher, Hannah Dueck, Sarah Middleton, Mugdha Khaladkar, Young-Ji Na, Junhyong Kim KimLabIDV: Application for Interactive RNA-Seq Data Analysis and Visualization (Preprint) bioRxiv 053348"
             )
 
             deseq_info <- list(
                 Module = "DESeq2",
-                Description = "Differential expression based on a model using the negative binomial distribution by Michael I Love, Wolfgang Huber and Simon Anders (2014)."
-                #Citation = "Michael I Love, Wolfgang Huber and Simon Anders (2014): Moderated estimation of fold change and dispersion for RNA-Seq data with DESeq2. Genome Biology"
+                Description = "Differential expression based on a model using the negative binomial distribution by Michael I Love, Wolfgang Huber and Simon Anders (2014).",
+                Depend = c("DESeq2"),
+                Citation = "Michael I Love, Wolfgang Huber and Simon Anders (2014): Moderated estimation of fold change and dispersion for RNA-Seq data with DESeq2. Genome Biology"
             )
 
             scde_info <- list(
                 Module = "scde",
-                Description = "Single cell differential expression analysis by Kharchenko P and Fan J (2016)."
-                #Citation = "Kharchenko P and Fan J (2016). scde: Single Cell Differential Expression. R package version 2.2.0, http://pklab.med.harvard.edu/scde."
+                Description = "Single cell differential expression analysis by Kharchenko P and Fan J (2016).",
+                Depend = c("scde"),
+                Citation = "Kharchenko P and Fan J (2016). scde: Single Cell Differential Expression. R package version 2.2.0, http://pklab.med.harvard.edu/scde."
             )
 
             monocle_info <- list(
                 Module = "monocle",
-                Description = "Clustering, differential expression, and trajectory analysis for single- cell RNA-Seq by Cole Trapnell and Davide Cacchiarelli et al (2014)."
-                #Citation = "Cole Trapnell and Davide Cacchiarelli et al (2014): The dynamics and regulators of cell fate decisions are revealed by pseudo-temporal ordering of single cells. Nature Biotechnology."
+                Description = "Clustering, differential expression, and trajectory analysis for single- cell RNA-Seq by Cole Trapnell and Davide Cacchiarelli et al (2014).",
+                Depend = c("HSMMSingleCell"),
+                Citation = "Cole Trapnell and Davide Cacchiarelli et al (2014): The dynamics and regulators of cell fate decisions are revealed by pseudo-temporal ordering of single cells. Nature Biotechnology."
             )
 
             network_info <- list(
                 Module = "PIVOT.network",
-                Description = "Visualization of interactome/regulome network and transdifferentiation factor prediction with Mogrify-like method."
-                #Citation = "Rackham, O. J., Firas, J., Fang, H., Oates, M. E., Holmes, M. L., Knaupp, A. S., ... & Petretto, E. (2016). A predictive computational framework for direct reprogramming between human cell types. Nature genetics."
+                Description = "Visualization of interactome/regulome network and transdifferentiation factor prediction with Mogrify-like method.",
+                Depend = c("STRINGdb"),
+                Citation = "Rackham, O. J., Firas, J., Fang, H., Oates, M. E., Holmes, M. L., Knaupp, A. S., ... & Petretto, E. (2016). A predictive computational framework for direct reprogramming between human cell types. Nature genetics."
             )
 
             toolkit_info <- list(
                 Module = "PIVOT.toolkit",
-                Description = "A set of tools for drawing Venn Diagram, converting gene name to gene id, etc."
+                Description = "A set of tools for drawing Venn Diagram, converting gene name to gene id, etc.",
+                Depend = c("PIVOT.analysis"),
+                Citation = "Qin Zhu, Stephen A Fisher, Hannah Dueck, Sarah Middleton, Mugdha Khaladkar, Young-Ji Na, Junhyong Kim KimLabIDV: Application for Interactive RNA-Seq Data Analysis and Visualization (Preprint) bioRxiv 053348"
             )
 
             info_tbl <- as.data.frame(rbind(
@@ -206,22 +213,19 @@ pivot <- function(args = "launcher") {
 
             info_tbl$Pick <- shinyInputVal(checkboxInput, nrow(info_tbl), 'pick_', cVal = cVal, label = NULL, width = '50px')
 
-            info_tbl$Pick[which(!info_tbl$Module %in% c(packList,"PIVOT.network", "PIVOT.toolkit"))] <- ""
+            info_tbl$Pick[which(!info_tbl$Depend %in% c(packList))] <- ""
 
             info_tbl$Status <- shinyInput(actionButton, nrow(info_tbl), 'button_', label = "Install", onclick = 'Shiny.onInputChange(\"select_button\",  this.id)')
 
-            info_tbl$Status[which(info_tbl$Module %in% packList)] <- "Installed"
-            # Have not separated toolkit from analysis
-            info_tbl$Status[which(info_tbl$Module =="PIVOT.toolkit")] <- "Installed"
+            info_tbl$Status[which(info_tbl$Depend %in% c(packList))] <- "Installed"
 
             # Rearranging the columns
-            info_tbl <- info_tbl[,c("Pick", "Module", "Status", "Description")]
             return(info_tbl)
         })
 
 
         output$workflow_tbl = DT::renderDataTable(
-            info_tbl(), rownames = F, escape = FALSE, selection = 'none', options = list(
+            info_tbl()[,c("Pick", "Module", "Status", "Description")], rownames = F, escape = FALSE, selection = 'none', options = list(
                 dom = 't', paging = FALSE, ordering = FALSE,
                 preDrawCallback = JS('function() { Shiny.unbindAll(this.api().table().node()); }'),
                 drawCallback = JS('function() { Shiny.bindAll(this.api().table().node()); } ')
@@ -230,14 +234,15 @@ pivot <- function(args = "launcher") {
 
         observeEvent(input$select_button, {
             selectedRow <- as.numeric(strsplit(input$select_button, "_")[[1]][2])
-            selectedModule <- info_tbl()$Module[selectedRow]
+            selectedPkg <- info_tbl()$Depend[selectedRow]
 
             # Install code here, sort out later
             #stopApp("launching data module... (if new window does not show up, please use command launch_pivotData() or try again)")
             #sendToConsole("launch_pivotData()", execute = T)
-            print(selectedModule)
+            print(paste("Installing selected package:", selectedPkg, ". Please close the window and restart after the package being installed with pivot()"))
             source("https://bioconductor.org/biocLite.R")
-            biocLite("DESeq2", suppressUpdates = T, ask = F)
+            biocLite(selectedPkg, suppressUpdates = T, ask = F)
+            print("Done!")
         })
 
         modules<-reactive({
