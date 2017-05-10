@@ -3,7 +3,7 @@
 export(clean_pivotSession)
 export(detachAllPackages)
 export(pivot)
-export(pivot_main)
+export(pivot_module)
 import(DT)
 import(PIVOT.data)
 import(miniUI)

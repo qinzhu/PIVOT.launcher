@@ -1,3 +1,58 @@
+
+# Launcher for picking packages
+
+packList <-rownames(installed.packages())
+
+main_info <- list(
+    Module = "PIVOT.analysis",
+    Description = "Main analysis module of PIVOT, including data input and management, DE, clustering, heatmap, dimension reduction, etc. ",
+    Depend = c("PIVOT.analysis"),
+    Citation = "Qin Zhu, Stephen A Fisher, Hannah Dueck, Sarah Middleton, Mugdha Khaladkar, Young-Ji Na, Junhyong Kim KimLabIDV: Application for Interactive RNA-Seq Data Analysis and Visualization (Preprint) bioRxiv 053348"
+)
+
+deseq_info <- list(
+    Module = "DESeq2",
+    Description = "Differential expression based on a model using the negative binomial distribution by Michael I Love, Wolfgang Huber and Simon Anders (2014).",
+    Depend = c("DESeq2"),
+    Citation = "Michael I Love, Wolfgang Huber and Simon Anders (2014): Moderated estimation of fold change and dispersion for RNA-Seq data with DESeq2. Genome Biology"
+)
+
+scde_info <- list(
+    Module = "scde",
+    Description = "Single cell differential expression analysis by Kharchenko P and Fan J (2016).",
+    Depend = c("scde"),
+    Citation = "Kharchenko P and Fan J (2016). scde: Single Cell Differential Expression. R package version 2.2.0, http://pklab.med.harvard.edu/scde."
+)
+
+monocle_info <- list(
+    Module = "monocle",
+    Description = "Clustering, differential expression, and trajectory analysis for single- cell RNA-Seq by Cole Trapnell and Davide Cacchiarelli et al (2014).",
+    Depend = c("HSMMSingleCell"),
+    Citation = "Cole Trapnell and Davide Cacchiarelli et al (2014): The dynamics and regulators of cell fate decisions are revealed by pseudo-temporal ordering of single cells. Nature Biotechnology."
+)
+
+network_info <- list(
+    Module = "PIVOT.network",
+    Description = "Visualization of interactome/regulome network and transdifferentiation factor prediction with Mogrify-like method.",
+    Depend = c("STRINGdb"),
+    Citation = "Rackham, O. J., Firas, J., Fang, H., Oates, M. E., Holmes, M. L., Knaupp, A. S., ... & Petretto, E. (2016). A predictive computational framework for direct reprogramming between human cell types. Nature genetics."
+)
+
+toolkit_info <- list(
+    Module = "PIVOT.toolkit",
+    Description = "A set of tools for drawing Venn Diagram, converting gene name to gene id, etc.",
+    Depend = c("PIVOT.analysis"),
+    Citation = "Qin Zhu, Stephen A Fisher, Hannah Dueck, Sarah Middleton, Mugdha Khaladkar, Young-Ji Na, Junhyong Kim KimLabIDV: Application for Interactive RNA-Seq Data Analysis and Visualization (Preprint) bioRxiv 053348"
+)
+
+module_tbl <- as.data.frame(rbind(
+    main_info, deseq_info, scde_info, monocle_info, network_info, toolkit_info
+))
+
+module_tbl <- cbind(ID = seq.int(nrow(module_tbl)), module_tbl)
+
+
+
 #' PIVOT laucher
 #'
 #' Serves as a gateway for all analysis modules and allow users to monitor the R session state and clean when needed.
@@ -87,8 +142,8 @@ pivot <- function(args = "launcher") {
                     if("monocle" %in% modules()) {
                         require(monocle)
                     }
-                    stopApp("Please use command pivot_main() if new window does not launch...")
-                    rstudioapi::sendToConsole("pivot_main()", execute = T)
+                    stopApp("Please use command pivot('main') if new window does not launch...")
+                    rstudioapi::sendToConsole("Sys.sleep(1); pivot('main')", execute = T)
                 })
             } else {
                 stopApp()
@@ -155,59 +210,8 @@ pivot <- function(args = "launcher") {
             ))
         })
 
-
-
-
-
-
         info_tbl <- reactive({
-            packList <-rownames(installed.packages())
-
-            main_info <- list(
-                Module = "PIVOT.analysis",
-                Description = "Main analysis module of PIVOT, including data input and management, DE, clustering, heatmap, dimension reduction, etc. ",
-                Depend = c("PIVOT.analysis"),
-                Citation = "Qin Zhu, Stephen A Fisher, Hannah Dueck, Sarah Middleton, Mugdha Khaladkar, Young-Ji Na, Junhyong Kim KimLabIDV: Application for Interactive RNA-Seq Data Analysis and Visualization (Preprint) bioRxiv 053348"
-            )
-
-            deseq_info <- list(
-                Module = "DESeq2",
-                Description = "Differential expression based on a model using the negative binomial distribution by Michael I Love, Wolfgang Huber and Simon Anders (2014).",
-                Depend = c("DESeq2"),
-                Citation = "Michael I Love, Wolfgang Huber and Simon Anders (2014): Moderated estimation of fold change and dispersion for RNA-Seq data with DESeq2. Genome Biology"
-            )
-
-            scde_info <- list(
-                Module = "scde",
-                Description = "Single cell differential expression analysis by Kharchenko P and Fan J (2016).",
-                Depend = c("scde"),
-                Citation = "Kharchenko P and Fan J (2016). scde: Single Cell Differential Expression. R package version 2.2.0, http://pklab.med.harvard.edu/scde."
-            )
-
-            monocle_info <- list(
-                Module = "monocle",
-                Description = "Clustering, differential expression, and trajectory analysis for single- cell RNA-Seq by Cole Trapnell and Davide Cacchiarelli et al (2014).",
-                Depend = c("HSMMSingleCell"),
-                Citation = "Cole Trapnell and Davide Cacchiarelli et al (2014): The dynamics and regulators of cell fate decisions are revealed by pseudo-temporal ordering of single cells. Nature Biotechnology."
-            )
-
-            network_info <- list(
-                Module = "PIVOT.network",
-                Description = "Visualization of interactome/regulome network and transdifferentiation factor prediction with Mogrify-like method.",
-                Depend = c("STRINGdb"),
-                Citation = "Rackham, O. J., Firas, J., Fang, H., Oates, M. E., Holmes, M. L., Knaupp, A. S., ... & Petretto, E. (2016). A predictive computational framework for direct reprogramming between human cell types. Nature genetics."
-            )
-
-            toolkit_info <- list(
-                Module = "PIVOT.toolkit",
-                Description = "A set of tools for drawing Venn Diagram, converting gene name to gene id, etc.",
-                Depend = c("PIVOT.analysis"),
-                Citation = "Qin Zhu, Stephen A Fisher, Hannah Dueck, Sarah Middleton, Mugdha Khaladkar, Young-Ji Na, Junhyong Kim KimLabIDV: Application for Interactive RNA-Seq Data Analysis and Visualization (Preprint) bioRxiv 053348"
-            )
-
-            info_tbl <- as.data.frame(rbind(
-                main_info, deseq_info, scde_info, monocle_info, network_info, toolkit_info
-            ))
+            info_tbl <- module_tbl
 
             cVal = c(T,T,F,F,F,T)
 
@@ -225,7 +229,7 @@ pivot <- function(args = "launcher") {
 
 
         output$workflow_tbl = DT::renderDataTable(
-            info_tbl()[,c("Pick", "Module", "Status", "Description")], rownames = F, escape = FALSE, selection = 'none', options = list(
+            info_tbl()[,c("ID", "Pick", "Module", "Status", "Description")], rownames = F, escape = FALSE, selection = 'none', options = list(
                 dom = 't', paging = FALSE, ordering = FALSE,
                 preDrawCallback = JS('function() { Shiny.unbindAll(this.api().table().node()); }'),
                 drawCallback = JS('function() { Shiny.bindAll(this.api().table().node()); } ')
@@ -253,7 +257,7 @@ pivot <- function(args = "launcher") {
             if("monocle" %in% modules()) {
                 tags$p("Note: Monocle 2 has multiple dependecies. Please limit your module choice.")
             } else {
-                tags$p("Please select modules you want to use.")
+                tags$p("Please select modules you want to use. If using R (not Rstudio), please use command: pivot(#ID_vector)) such as pivot(c(1,3,5)) to launch.")
             }
         })
 
@@ -273,15 +277,22 @@ pivot <- function(args = "launcher") {
         # Launch default analysis module
         runGadget(ui, server, viewer = dialogViewer("PIVOT: Platform for Interactive Analysis and Visualization of Transcriptomics Data, v1.0.0"))
     } else {
-        if(args == "main"){
-            pivot_analysis()
-        } else if (args == "launcher") {
-            runGadget(ui, server, viewer = dialogViewer("PIVOT: Platform for Interactive Analysis and Visualization of Transcriptomics Data, v1.0.0"))
-        } else if (args == "clean") {
-            clean_pivotSession()
+        if(is.numeric(args)) {
+            mods = module_tbl$Module[match(args, module_tbl$ID)]
+            assign("r_module", mods, envir = .GlobalEnv)
+            pivot_main()
         } else {
-            stop("Args not known, must be one of 'launcher', 'main'.")
+            if(args == "main"){
+                pivot_main()
+            } else if (args == "launcher") {
+                runGadget(ui, server, viewer = dialogViewer("PIVOT: Platform for Interactive Analysis and Visualization of Transcriptomics Data, v1.0.0"))
+            } else if (args == "clean") {
+                clean_pivotSession()
+            } else {
+                stop("Args not known, must be one of 'launcher', 'main'.")
+            }
         }
+
     }
 }
 
@@ -293,10 +304,16 @@ clean_pivotSession <- function(){
     detachAllPackages(); .rs.restartR(afterRestartCommand = 'pivot()')
 }
 
-#' Launch main interface
+
+#' Show available modules of PIVOT
 #'
 #' @export
-pivot_main <- function(){
-    Sys.sleep(1); pivot('main')
+pivot_module <- function() {
+    print("Current available PIVOT modules: (Use pivot(#ID_vector)) such as pivot(c(1,3,5)) to launch)")
+    module_tbl<-module_tbl[,c("ID", "Module"), drop = F]
+    print.data.frame(module_tbl, row.names = F)
 }
+
+
+
 
