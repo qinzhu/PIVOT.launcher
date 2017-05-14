@@ -1,8 +1,6 @@
 
 # Launcher for picking packages
 
-packList <-rownames(installed.packages())
-
 main_info <- list(
     Module = "PIVOT.analysis",
     Description = "Main analysis module of PIVOT, including data input and management, DE, clustering, heatmap, dimension reduction, etc. ",
@@ -212,6 +210,7 @@ pivot <- function(args = "launcher") {
 
         info_tbl <- reactive({
             info_tbl <- module_tbl
+            packList <-rownames(installed.packages())
 
             cVal = c(T,T,F,F,F,T)
 
@@ -222,7 +221,6 @@ pivot <- function(args = "launcher") {
             info_tbl$Status <- shinyInput(actionButton, nrow(info_tbl), 'button_', label = "Install", onclick = 'Shiny.onInputChange(\"select_button\",  this.id)')
 
             info_tbl$Status[which(info_tbl$Depend %in% c(packList))] <- "Installed"
-
             # Rearranging the columns
             return(info_tbl)
         })
