@@ -56,7 +56,7 @@ module_tbl <- cbind(ID = seq.int(nrow(module_tbl)), module_tbl)
 #' Serves as a gateway for all analysis modules and allow users to monitor the R session state and clean when needed.
 #' @examples
 #' pivot()
-#' @import shiny miniUI rstudioapi PIVOT.data DT
+#' @import shiny miniUI rstudioapi DT
 #' @export
 pivot <- function(args = "launcher") {
 

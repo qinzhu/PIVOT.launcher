@@ -32,7 +32,7 @@ detachAllPackages <- function() {
     basic.namespaces <- c('shiny', 'R6', 'graphics', 'htmltools', 'tools', 'PIVOT', 'rstudioapi', # Base dependence
                           'utils', 'grDevices', 'Rcpp', 'stats', 'datasets', 'methods', 'digest', # Base dependence
                           'xtable', 'httpuv', 'mime', 'miniUI', 'packrat', 'base', # Base dependence
-                          'PIVOT.data', 'shinydashboard', 'shinyBS', # PIVOT.data dependence
+                          'shinydashboard', 'shinyBS', # PIVOT.data dependence
                           'PIVOT.analysis') # PIVOT.analysis dependence
 
     # First unload all packages (and try unloading associated namespcaces)
