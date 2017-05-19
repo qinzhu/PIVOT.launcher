@@ -9,8 +9,7 @@ Description: This program is based on a collection of R scripts written by
     members of Junhyong Kim Lab at University of Pennsylvania. Its goal is to
     facilitate fast and interactive transcriptomics data analysis and visualization.
 Depends: R (>= 3.2.1),
-    PIVOT.data, 
-    PIVOT.analysis
+    PIVOT
 Imports: 
     shiny, 
     miniUI, 
