@@ -15,6 +15,13 @@ deseq_info <- list(
     Citation = "Michael I Love, Wolfgang Huber and Simon Anders (2014): Moderated estimation of fold change and dispersion for RNA-Seq data with DESeq2. Genome Biology"
 )
 
+edgeR_info <- list(
+    Module = "edgeR",
+    Description = "Differential expression analysis of digital gene expression data by Yunshun Chen, Davis McCarthy, Matthew Ritchie, Mark Robinson, Gordon K. Smyth.",
+    Depend = c("edgeR"),
+    Citation = "Robinson MD, McCarthy DJ and Smyth GK (2010) and McCarthy DJ, Chen Y and Smyth GK (2012)."
+)
+
 scde_info <- list(
     Module = "scde",
     Description = "Single cell differential expression analysis by Kharchenko P and Fan J (2016).",
@@ -39,12 +46,12 @@ network_info <- list(
 toolkit_info <- list(
     Module = "PIVOT.toolkit",
     Description = "A set of tools for drawing Venn Diagram, converting gene name to gene id, etc.",
-    Depend = c("PIVOT.analysis"),
+    Depend = c("PIVOT.analysis"), # For now we don't have many scripts for this module so it is included in PIVOT.analysis
     Citation = "Qin Zhu, Stephen A Fisher, Hannah Dueck, Sarah Middleton, Mugdha Khaladkar, Young-Ji Na, Junhyong Kim KimLabIDV: Application for Interactive RNA-Seq Data Analysis and Visualization (Preprint) bioRxiv 053348"
 )
 
 module_tbl <- as.data.frame(rbind(
-    main_info, deseq_info, scde_info, monocle_info, network_info, toolkit_info
+    main_info, deseq_info, edgeR_info, scde_info, monocle_info, network_info, toolkit_info
 ))
 
 module_tbl <- cbind(ID = seq.int(nrow(module_tbl)), module_tbl)
@@ -212,7 +219,7 @@ pivot <- function(args = "launcher") {
             info_tbl <- module_tbl
             packList <-rownames(installed.packages())
 
-            cVal = c(T,T,F,F,F,T)
+            cVal = c(T,T,F,F,F,F,T)
 
             info_tbl$Pick <- shinyInputVal(checkboxInput, nrow(info_tbl), 'pick_', cVal = cVal, label = NULL, width = '50px')
 
