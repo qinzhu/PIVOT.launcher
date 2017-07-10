@@ -40,18 +40,29 @@ network_info <- list(
     Module = "PIVOT.network",
     Description = "Visualization of interactome/regulome network and transdifferentiation factor prediction with Mogrify-like method.",
     Depend = c("STRINGdb"),
-    Citation = "Rackham, O. J., Firas, J., Fang, H., Oates, M. E., Holmes, M. L., Knaupp, A. S., ... & Petretto, E. (2016). A predictive computational framework for direct reprogramming between human cell types. Nature genetics."
+    Citation = "Franceschini, A (2013). STRING v9.1: protein-protein interaction networks, with increased coverage and integration.
+  In:'Nucleic Acids Res. 2013 Jan;41:D808-15. doi: 10.1093/nar/gks1094. Epub 2012 Nov 29'."
+)
+
+caret_info <- list(
+    Module = "caret",
+    Description = "The caret package is a set of functions that attempt to streamline the process for creating predictive models.",
+    Depend = c("caret"),
+    Citation = "Max Kuhn. Contributions from Jed Wing, Steve Weston, Andre Williams, Chris Keefer, Allan Engelhardt, Tony Cooper,
+  Zachary Mayer, Brenton Kenkel, the R Core Team, Michael Benesty, Reynald Lescarbeau, Andrew Ziem, Luca Scrucca, Yuan
+    Tang, Can Candan and Tyler Hunt. (2017). caret: Classification and Regression Training. R package version 6.0-76.
+    https://CRAN.R-project.org/package=caret"
 )
 
 toolkit_info <- list(
     Module = "PIVOT.toolkit",
     Description = "A set of tools for drawing Venn Diagram, converting gene name to gene id, etc.",
     Depend = c("PIVOT.analysis"), # For now we don't have many scripts for this module so it is included in PIVOT.analysis
-    Citation = "Qin Zhu, Stephen A Fisher, Hannah Dueck, Sarah Middleton, Mugdha Khaladkar, Young-Ji Na, Junhyong Kim KimLabIDV: Application for Interactive RNA-Seq Data Analysis and Visualization (Preprint) bioRxiv 053348"
+    Citation = "Qin Zhu, Stephen A Fisher, Hannah Dueck, Sarah Middleton, Mugdha Khaladkar, Junhyong Kim KimLabIDV: Application for Interactive RNA-Seq Data Analysis and Visualization (Preprint) bioRxiv 053348"
 )
 
 module_tbl <- as.data.frame(rbind(
-    main_info, deseq_info, edgeR_info, scde_info, monocle_info, network_info, toolkit_info
+    main_info, deseq_info, edgeR_info, scde_info, monocle_info, network_info, caret_info, toolkit_info
 ))
 
 module_tbl <- cbind(ID = seq.int(nrow(module_tbl)), module_tbl)
@@ -68,31 +79,33 @@ module_tbl <- cbind(ID = seq.int(nrow(module_tbl)), module_tbl)
 pivot <- function(args = "launcher") {
 
     ui <- miniUI::miniPage(
-        gadgetTitleBar("PIVOT Launcher",
+        miniUI::gadgetTitleBar("PIVOT Launcher",
                        left = NULL,
                        right = NULL),
-        miniTabstripPanel(
+        miniUI::miniTabstripPanel(
             id = "tabstrip",
-            miniTabPanel("Main", icon = icon("flask"),
-                         miniContentPanel(
-                             fillCol(flex = c(NA,NA, 1),
-                                     dllUI("module1"),
-                                     uiOutput("pkg_info_ui"),
-                                     DT::dataTableOutput("workflow_tbl")
-                             )
-                         )
+            miniUI::miniTabPanel("Main",
+                                 icon = icon("flask"),
+                                 miniUI::miniContentPanel(
+                                     fillCol(flex = c(NA,NA, 1),
+                                             dllUI("module1"),
+                                             uiOutput("pkg_info_ui"),
+                                             DT::dataTableOutput("workflow_tbl")
+                                     )
+                                 )
             ),
-            miniTabPanel("Info", icon = icon("map-pin"),
-                         miniContentPanel(
-                             fillCol(flex = c(NA,1),
-                                     dllUI("module2"),
-                                     uiOutput("data_status")
-                             )
-                         )
+            miniUI::miniTabPanel("Info",
+                                 icon = icon("map-pin"),
+                                 miniUI::miniContentPanel(
+                                     fillCol(flex = c(NA,1),
+                                             dllUI("module2"),
+                                             uiOutput("data_status")
+                                     )
+                                 )
             ),
             between = list(
                 #tags$div(id = "max_dll_monitor", class = "shiny-html-output", style = "background-color: #f2f2f2; text-align: center;"),
-                miniButtonBlock(
+                miniUI::miniButtonBlock(
                     actionButton("launch_module", label = "Launch Module", class = "btn-primary", onclick = "setTimeout(function(){window.close();}, 100); "),
                     #actionButton("launch_module", "Launch Module", class = "btn-primary"),
                     actionButton("clean_session", label = "Clean DLLs", class = "btn-success", onclick = "setTimeout(function(){window.close();}, 100);) ")
@@ -219,7 +232,7 @@ pivot <- function(args = "launcher") {
             info_tbl <- module_tbl
             packList <-rownames(installed.packages())
 
-            cVal = c(T,T,F,F,F,F,T)
+            cVal = c(T,T,F,F,F,F,F,T)
 
             info_tbl$Pick <- shinyInputVal(checkboxInput, nrow(info_tbl), 'pick_', cVal = cVal, label = NULL, width = '50px')
 
