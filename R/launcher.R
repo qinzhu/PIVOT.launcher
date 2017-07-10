@@ -5,7 +5,7 @@ main_info <- list(
     Module = "PIVOT.analysis",
     Description = "Main analysis module of PIVOT, including data input and management, DE, clustering, heatmap, dimension reduction, etc. ",
     Depend = c("PIVOT.analysis"),
-    Citation = "Qin Zhu, Stephen A Fisher, Hannah Dueck, Sarah Middleton, Mugdha Khaladkar, Young-Ji Na, Junhyong Kim KimLabIDV: Application for Interactive RNA-Seq Data Analysis and Visualization (Preprint) bioRxiv 053348"
+    Citation = "Qin Zhu, Stephen A Fisher, Hannah Dueck, Sarah Middleton, Mugdha Khaladkar and Junhyong Kim. PIVOT: Platform for Interactive Analysis and Visualization of Transcriptomics Data (Preprint) bioRxiv 053348"
 )
 
 deseq_info <- list(
@@ -58,7 +58,7 @@ toolkit_info <- list(
     Module = "PIVOT.toolkit",
     Description = "A set of tools for drawing Venn Diagram, converting gene name to gene id, etc.",
     Depend = c("PIVOT.analysis"), # For now we don't have many scripts for this module so it is included in PIVOT.analysis
-    Citation = "Qin Zhu, Stephen A Fisher, Hannah Dueck, Sarah Middleton, Mugdha Khaladkar, Junhyong Kim KimLabIDV: Application for Interactive RNA-Seq Data Analysis and Visualization (Preprint) bioRxiv 053348"
+    Citation = "Qin Zhu, Stephen A Fisher, Hannah Dueck, Sarah Middleton, Mugdha Khaladkar and Junhyong Kim. PIVOT: Platform for Interactive Analysis and Visualization of Transcriptomics Data (Preprint) bioRxiv 053348"
 )
 
 module_tbl <- as.data.frame(rbind(

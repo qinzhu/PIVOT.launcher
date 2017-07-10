@@ -3,7 +3,7 @@ Type: Package
 Title: PIVOT launcher
 Version: 1.0.0
 Author: Qin Zhu, Stephen Fisher, Hannah Dueck, Sarah Middleton, Mugdha
-    Khaladkar, Young-Ji Na, Junhyong Kim
+    Khaladkar, Junhyong Kim
 Maintainer: Qin Zhu <zhuqin@mail.med.upenn.edu>
 Description: This program is based on a collection of R scripts written by
     members of Junhyong Kim Lab at University of Pennsylvania. Its goal is to
