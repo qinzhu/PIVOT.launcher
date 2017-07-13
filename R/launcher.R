@@ -202,26 +202,26 @@ pivot <- function(args = "launcher") {
         ##### Data Info boxes
 
         output$data_info <- DT::renderDataTable({
-            if(is.null(r_data$sample_meta)) return()
-            DT::datatable(r_data$sample_meta, style = "bootstrap",
+            if(is.null(r_data$sample_stats)) return()
+            DT::datatable(r_data$sample_stats, style = "bootstrap",
                           options = list(dom = 'tipr'))
         })
 
         output$input_file_info <- renderUI({
-            if(is.null(r_data$file_path) || is.null(r_data$input_type)) {
-                file_path = ""
-            } else if(r_data$input_type == "single"){
-                file_path = paste("Input file:", r_data$file_path$name)
+            if(is.null(r_data$file_info)) {
+                file_path = NULL
+            } else if(r_data$file_info$type == "single"){
+                file_path = tags$li(paste("Input file:", r_data$file_info$name))
             }
-            else if(r_data$input_type == "dir") {
-                file_path = paste("Input Directory:", r_data$file_path[[length(r_data$file_path)]])
+            else if(r_data$file_info$type == "dir") {
+                file_path = tags$li(paste("Input Directory:", r_data$file_info$path[[length(r_data$file_info$path)]]))
             }
 
             num_features = paste("Number of selected features:", nrow(r_data$raw))
             num_samples = paste("Number of selected samples:", ncol(r_data$raw))
             #num_cats = paste("Number of design categories:", ncol(r_data$glb.meta) - 1)
             return(list(
-                tags$li(file_path),
+                file_path,
                 tags$li(num_features),
                 tags$li(num_samples)
                 #tags$li(num_cats)
