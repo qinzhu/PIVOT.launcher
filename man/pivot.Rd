@@ -2,13 +2,10 @@
 % Please edit documentation in R/launcher.R
 \name{pivot}
 \alias{pivot}
-\title{PIVOT laucher}
+\title{Launch PIVOT with default all seleceted modules}
 \usage{
-pivot(args = "launcher")
+pivot(s = NULL)
 }
 \description{
-Serves as a gateway for all analysis modules and allow users to monitor the R session state and clean when needed.
-}
-\examples{
-pivot()
+Launch PIVOT with default all seleceted modules
 }

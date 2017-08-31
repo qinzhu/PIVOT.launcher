@@ -73,10 +73,10 @@ module_tbl <- cbind(ID = seq.int(nrow(module_tbl)), module_tbl)
 #'
 #' Serves as a gateway for all analysis modules and allow users to monitor the R session state and clean when needed.
 #' @examples
-#' pivot()
+#' pivot_launcher()
 #' @import shiny miniUI rstudioapi DT
 #' @export
-pivot <- function(args = "launcher") {
+pivot_launcher <- function() {
 
     ui <- miniUI::miniPage(
         miniUI::gadgetTitleBar("PIVOT Launcher",
@@ -157,11 +157,8 @@ pivot <- function(args = "launcher") {
 
             if(interactive()) {
                 isolate({
-                    if("monocle" %in% modules()) {
-                        require(monocle)
-                    }
-                    stopApp("Please use command pivot('main') if new window does not launch...")
-                    rstudioapi::sendToConsole("Sys.sleep(1); pivot('main')", execute = T)
+                    stopApp("Please use command pivot() if new window does not launch...")
+                    rstudioapi::sendToConsole("Sys.sleep(1); pivot()", execute = T)
                 })
             } else {
                 stopApp()
@@ -175,8 +172,8 @@ pivot <- function(args = "launcher") {
 
             if(interactive()) {
                 isolate({
-                    stopApp("Performing DLL clean up... (Please use command pivot('clean') if new window does not show up.)")
-                    sendToConsole("pivot('clean')", execute = T)
+                    stopApp("Performing DLL clean up... (Please use command clean_pivotSession() if new window does not show up.)")
+                    sendToConsole("clean_pivotSession()", execute = T)
                 })
             } else {
                 stopApp()
@@ -291,27 +288,7 @@ pivot <- function(args = "launcher") {
         saveModule(session)
     }
 
-    if(is.null(args)) {
-        # Launch default analysis module
-        runGadget(ui, server, viewer = dialogViewer("PIVOT: Platform for Interactive Analysis and Visualization of Transcriptomics Data, v1.0.0"))
-    } else {
-        if(is.numeric(args)) {
-            mods = module_tbl$Module[match(args, module_tbl$ID)]
-            assign("r_module", mods, envir = .GlobalEnv)
-            pivot_main()
-        } else {
-            if(args == "main"){
-                pivot_main()
-            } else if (args == "launcher") {
-                runGadget(ui, server, viewer = dialogViewer("PIVOT: Platform for Interactive Analysis and Visualization of Transcriptomics Data, v1.0.0"))
-            } else if (args == "clean") {
-                clean_pivotSession()
-            } else {
-                stop("Args not known, must be one of 'launcher', 'main'.")
-            }
-        }
-
-    }
+    runGadget(ui, server, viewer = dialogViewer("PIVOT: Platform for Interactive Analysis and Visualization of Transcriptomics Data, v1.0.0"))
 }
 
 
@@ -330,6 +307,35 @@ pivot_module <- function() {
     print("Current available PIVOT modules: (Use pivot(#ID_vector)) such as pivot(c(1,3,5)) to launch)")
     module_tbl<-module_tbl[,c("ID", "Module"), drop = F]
     print.data.frame(module_tbl, row.names = F)
+}
+
+#' Launch PIVOT with default all seleceted modules
+#'
+#' @export
+pivot <- function(s=NULL) {
+    if(is.null(s)) {
+        if(exists("r_module")) {
+            print(paste("Launching previous selected module:", paste(r_module, collapse = ", ")))
+        } else {
+            mods = module_tbl$Module[match(c(1,2,8), module_tbl$ID)]
+            print(paste("Launching default module:", paste(mods, collapse = ",")))
+            assign("r_module", mods, envir = .GlobalEnv)
+        }
+        if("monocle" %in% r_module) {
+            require(monocle)
+        }
+        pivot_main()
+    } else if (is.numeric(s) && all(s%in%1:8)){
+        mods = module_tbl$Module[match(s, module_tbl$ID)]
+        assign("r_module", mods, envir = .GlobalEnv)
+        if("monocle" %in% r_module) {
+            require(monocle)
+        }
+        pivot_main()
+    } else {
+        print("Unknown argument. Use pivot_module() to discover modules currently implemented in PIVOT.")
+        return()
+    }
 }
 
 
