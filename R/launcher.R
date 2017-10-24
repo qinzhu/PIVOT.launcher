@@ -106,7 +106,7 @@ pivot_launcher <- function() {
             between = list(
                 #tags$div(id = "max_dll_monitor", class = "shiny-html-output", style = "background-color: #f2f2f2; text-align: center;"),
                 miniUI::miniButtonBlock(
-                    actionButton("launch_module", label = "Launch Module", class = "btn-primary", onclick = "setTimeout(function(){window.close();}, 100); "),
+                    actionButton("launch_module", label = "Set Module", class = "btn-primary", onclick = "setTimeout(function(){window.close();}, 100); "),
                     #actionButton("launch_module", "Launch Module", class = "btn-primary"),
                     actionButton("clean_session", label = "Clean DLLs", class = "btn-success", onclick = "setTimeout(function(){window.close();}, 100);) ")
                 )
@@ -157,11 +157,10 @@ pivot_launcher <- function() {
 
             if(interactive()) {
                 isolate({
-                    stopApp("Please use command pivot() if new window does not launch...")
-                    rstudioapi::sendToConsole("Sys.sleep(1); pivot()", execute = T)
+                    stopApp("Modules successfully set. Launch pivot by command `pivot()`.")
                 })
             } else {
-                stopApp()
+                stopApp("Modules successfully set. Launch pivot by command `pivot()`.")
                 q("no")
             }
         })
