@@ -269,9 +269,9 @@ pivot_launcher <- function() {
 
         output$pkg_info_ui <- renderUI({
             if("monocle" %in% modules()) {
-                tags$p("Note: Monocle 2 has multiple dependecies. Please limit your module choice.")
+                tags$p("Note: Monocle 2 has multiple dependecies. Please limit your module choice if you have not increased MAX_NUM_DLL.")
             } else {
-                tags$p("Please select modules you want to use. If using R (not Rstudio), please use command: pivot(#ID_vector)) such as pivot(c(1,3,5)) to launch.")
+                tags$p("Please select modules you want to use. Then use pivot() to launch the main program.")
             }
         })
 
