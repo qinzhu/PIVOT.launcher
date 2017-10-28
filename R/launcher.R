@@ -316,7 +316,7 @@ pivot <- function(s=NULL) {
         if(exists("r_module")) {
             print(paste("Launching previous selected module:", paste(r_module, collapse = ", ")))
         } else {
-            mods = module_tbl$Module[match(c(1,2,8), module_tbl$ID)]
+            mods = module_tbl$Module[match(1:8, module_tbl$ID)]
             print(paste("Launching default module:", paste(mods, collapse = ",")))
             assign("r_module", mods, envir = .GlobalEnv)
         }
